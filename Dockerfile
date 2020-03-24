@@ -3,7 +3,7 @@ FROM docker.io/postgres:${postgres_image_version} AS builder
 ARG postgres_version=12
 ARG boost_dev_version=1.67
 ARG rdkit_git_url=https://github.com/rdkit/rdkit.git
-ARG rdkit_git_ref=Release_2019_09_3
+ARG rdkit_git_ref=Release_2020_03_1b1
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
@@ -24,7 +24,7 @@ RUN apt-get update \
         libboost-serialization${boost_dev_version}-dev \
         libboost-system${boost_dev_version}-dev \
         libeigen3-dev \
-        postgresql-server-dev-${postgres_version}=$(postgres -V | awk '{print substr($NF, 1, length($NF)-1)}') \
+        postgresql-server-dev-${postgres_version}=$(postgres -V | awk '{print $3}')\* \
         zlib1g-dev
 
 RUN mkdir -p /opt/RDKit-build \
