@@ -3,7 +3,7 @@ FROM docker.io/postgres:${postgres_image_version} AS builder
 ARG postgres_version=12
 ARG boost_dev_version=1.67
 ARG rdkit_git_url=https://github.com/rdkit/rdkit.git
-ARG rdkit_git_ref=Release_2020_03_1b1
+ARG rdkit_git_ref=Release_2020_03_1
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
