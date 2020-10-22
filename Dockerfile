@@ -1,9 +1,9 @@
-ARG postgres_image_version=12.2
+ARG postgres_image_version=12.4
 FROM docker.io/postgres:${postgres_image_version} AS builder
 ARG postgres_version=12
 ARG boost_dev_version=1.67
 ARG rdkit_git_url=https://github.com/rdkit/rdkit.git
-ARG rdkit_git_ref=Release_2020_03_2
+ARG rdkit_git_ref=Release_2020_09_1
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
@@ -24,6 +24,7 @@ RUN apt-get update \
         libboost-serialization${boost_dev_version}-dev \
         libboost-system${boost_dev_version}-dev \
         libeigen3-dev \
+        libfreetype6-dev \
         postgresql-server-dev-${postgres_version}=$(postgres -V | awk '{print $3}')\* \
         zlib1g-dev
 
@@ -71,11 +72,11 @@ WORKDIR /opt/RDKit-build/rdkit
 
 RUN initdb -D /opt/RDKit-build/pgdata \
   && pg_ctl -D /opt/RDKit-build/pgdata -l /opt/RDKit-build/pgdata/log.txt start \
-  && RDBASE="$PWD" LD_LIBRARY_PATH="$PWD/lib" PYTHONPATH="$PWD" ctest -j4 --output-on-failure \
+  && RDBASE="$PWD" LD_LIBRARY_PATH="$PWD/lib" ctest -j4 --output-on-failure \
   && pg_ctl -D /opt/RDKit-build/pgdata stop
 
 
-ARG postgres_image_version=12.2
+ARG postgres_image_version=12.4
 FROM docker.io/postgres:${postgres_image_version}
 ARG postgres_version=12
 ARG boost_version=1.67.0
@@ -86,6 +87,7 @@ RUN apt-get update \
         libboost-regex${boost_version} \
         libboost-serialization${boost_version} \
         libboost-system${boost_version} \
+        libfreetype6 \
         zlib1g \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
