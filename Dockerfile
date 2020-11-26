@@ -1,9 +1,9 @@
-ARG postgres_image_version=12.4
+ARG postgres_image_version=13.1
 FROM docker.io/postgres:${postgres_image_version} AS builder
-ARG postgres_version=12
+ARG postgres_version=13
 ARG boost_dev_version=1.67
 ARG rdkit_git_url=https://github.com/rdkit/rdkit.git
-ARG rdkit_git_ref=Release_2020_09_1
+ARG rdkit_git_ref=Release_2020_09_2
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
@@ -26,7 +26,9 @@ RUN apt-get update \
         libeigen3-dev \
         libfreetype6-dev \
         postgresql-server-dev-${postgres_version}=$(postgres -V | awk '{print $3}')\* \
-        zlib1g-dev
+        zlib1g-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /opt/RDKit-build \
     && chown postgres:postgres /opt/RDKit-build
@@ -76,9 +78,9 @@ RUN initdb -D /opt/RDKit-build/pgdata \
   && pg_ctl -D /opt/RDKit-build/pgdata stop
 
 
-ARG postgres_image_version=12.4
+ARG postgres_image_version=13.1
 FROM docker.io/postgres:${postgres_image_version}
-ARG postgres_version=12
+ARG postgres_version=13
 ARG boost_version=1.67.0
 
 RUN apt-get update \
