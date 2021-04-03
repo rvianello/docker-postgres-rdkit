@@ -1,9 +1,9 @@
-ARG postgres_image_version=13.1
+ARG postgres_image_version=13.2
 FROM docker.io/postgres:${postgres_image_version} AS builder
 ARG postgres_version=13
 ARG boost_dev_version=1.67
 ARG rdkit_git_url=https://github.com/rdkit/rdkit.git
-ARG rdkit_git_ref=Release_2020_09_3
+ARG rdkit_git_ref=Release_2021_03_1
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
@@ -60,6 +60,7 @@ RUN cmake \
     -D PostgreSQL_LIBRARY_DIR=`pg_config --libdir` \
     -D RDK_INSTALL_INTREE=OFF \
     -D CMAKE_INSTALL_PREFIX=/opt/RDKit \
+    -D CMAKE_BUILD_TYPE=Release \
     . 
 RUN make -j4
 
@@ -78,7 +79,7 @@ RUN initdb -D /opt/RDKit-build/pgdata \
   && pg_ctl -D /opt/RDKit-build/pgdata stop
 
 
-ARG postgres_image_version=13.1
+ARG postgres_image_version=13.2
 FROM docker.io/postgres:${postgres_image_version}
 ARG postgres_version=13
 ARG boost_version=1.67.0
