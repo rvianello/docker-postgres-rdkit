@@ -1,9 +1,9 @@
-ARG postgres_image_version=14.0
+ARG postgres_image_version=14.1
 FROM docker.io/postgres:${postgres_image_version} AS builder
 ARG postgres_version=14
 ARG boost_dev_version=1.74
 ARG rdkit_git_url=https://github.com/rdkit/rdkit.git
-ARG rdkit_git_ref=Release_2021_09_2
+ARG rdkit_git_ref=Release_2021_09_3
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
@@ -79,7 +79,7 @@ RUN initdb -D /opt/RDKit-build/pgdata \
   && pg_ctl -D /opt/RDKit-build/pgdata stop
 
 
-ARG postgres_image_version=14.0
+ARG postgres_image_version=14.1
 FROM docker.io/postgres:${postgres_image_version}
 ARG postgres_version=14
 ARG boost_version=1.74.0
