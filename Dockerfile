@@ -14,6 +14,9 @@ RUN apt-get update \
     && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
+
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
         build-essential \
@@ -25,7 +28,7 @@ RUN apt-get update \
         libboost-system${boost_dev_version}-dev \
         libeigen3-dev \
         libfreetype6-dev \
-        postgresql-server-dev-${postgres_version}=$(postgres -V | awk '{print $3}')\* \
+        postgresql-server-dev-all \
         zlib1g-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
