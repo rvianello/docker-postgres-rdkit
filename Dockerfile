@@ -25,7 +25,7 @@ RUN apt-get update \
         libboost-system${boost_dev_version}-dev \
         libeigen3-dev \
         libfreetype6-dev \
-        postgresql-server-dev-${postgres_version}=$(postgres -V | awk '{print $3}')\* \
+        postgresql-server-dev-${postgres_version} \
         zlib1g-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -79,7 +79,6 @@ RUN initdb -D /opt/RDKit-build/pgdata \
   && pg_ctl -D /opt/RDKit-build/pgdata stop
 
 
-ARG postgres_image_version=16.2
 FROM docker.io/postgres:${postgres_image_version}
 ARG postgres_version=16
 ARG boost_version=1.74.0
