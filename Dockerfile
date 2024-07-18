@@ -19,6 +19,7 @@ RUN apt-get update \
         build-essential \
         cmake \
         git \
+        coreutils \
         libboost-iostreams${boost_dev_version}-dev \
         libboost-regex${boost_dev_version}-dev \
         libboost-serialization${boost_dev_version}-dev \
@@ -62,7 +63,7 @@ RUN cmake \
     -D CMAKE_INSTALL_PREFIX=/opt/RDKit \
     -D CMAKE_BUILD_TYPE=Release \
     . 
-RUN make -j4
+RUN make -j$(nproc)
 
 USER root
 WORKDIR /opt/RDKit-build/rdkit
@@ -79,7 +80,6 @@ RUN initdb -D /opt/RDKit-build/pgdata \
   && pg_ctl -D /opt/RDKit-build/pgdata stop
 
 
-ARG postgres_image_version=16.2
 FROM docker.io/postgres:${postgres_image_version}
 ARG postgres_version=16
 ARG boost_version=1.74.0
